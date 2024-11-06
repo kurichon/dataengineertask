@@ -38,13 +38,16 @@ def find_missing_data(df_to_check):
         current_value = current_row['Incremental_Index']
         next_value = next_row['Incremental_Index']
 
+        current_timestamp = current_row['Timestamp']
+        next_timestamp = next_row['Timestamp']
+
         # Calculate the gap between current and next
         if next_value > current_value:
             gap = next_value - current_value - 1
         else:  # Account for wraparound from 255 to 0
             gap = (incremental_index_max - current_value) + next_value
 
-        if gap !=0:
+        if gap !=0: # has missing data
             # Add missing values to the list
             missing_data.extend([(current_value + j + 1) % (incremental_index_max + 1) for j in range(gap)])
             print(f"Data loss found at index {current_row['Index']}, total data loss: {len(missing_data)}")
